@@ -1,165 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Image Steganography</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-<style>
-body{
-font-family:Arial;
-max-width:700px;
-margin:auto;
-padding:20px;
-}
-
-button{
-padding:8px 14px;
-margin-top:10px;
-}
-</style>
-
+  <title>Mess Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body>
+<body style="text-align:center; font-family:Arial; margin-top:100px;">
 
-<h2>Encode (Hide File)</h2>
+  <h2>Mess Payment</h2>
+  <p>Click below to pay</p>
 
-<input type="file" id="cover"><br><br>
-<input type="file" id="secret"><br><br>
-
-<input type="password" id="pass" placeholder="Passcode"><br><br>
-
-<button onclick="encode()">Encode</button>
-
-<p id="encodeStatus"></p>
-
-<hr>
-
-<h2>Decode (Extract File)</h2>
-
-<input type="file" id="encoded"><br><br>
-
-<input type="password" id="decodePass" placeholder="Passcode"><br><br>
-
-<button onclick="decode()">Decode</button>
-
-<p id="decodeStatus"></p>
-
-
-<script>
-
-async function encode(){
-
-let cover=document.getElementById("cover").files[0]
-let secret=document.getElementById("secret").files[0]
-let pass=document.getElementById("pass").value
-
-if(!cover || !secret){
-alert("Select files")
-return
-}
-
-let zip=new JSZip()
-
-zip.file(secret.name,secret)
-
-let zipBlob=await zip.generateAsync({type:"uint8array"})
-
-let reader=new FileReader()
-
-reader.onload=function(){
-
-let coverData=new Uint8Array(reader.result)
-
-let marker=new TextEncoder().encode("STEGO_"+pass+"_")
-
-let merged=new Uint8Array(
-coverData.length + marker.length + zipBlob.length
-)
-
-merged.set(coverData,0)
-merged.set(marker,coverData.length)
-merged.set(zipBlob,coverData.length + marker.length)
-
-let blob=new Blob([merged])
-
-let link=document.createElement("a")
-link.href=URL.createObjectURL(blob)
-link.download="encoded_image.png"
-link.click()
-
-document.getElementById("encodeStatus").innerText=
-"File hidden successfully"
-
-}
-
-reader.readAsArrayBuffer(cover)
-
-}
-
-
-
-function decode(){
-
-let file=document.getElementById("encoded").files[0]
-let pass=document.getElementById("decodePass").value
-
-let reader=new FileReader()
-
-reader.onload=function(){
-
-let data=new Uint8Array(reader.result)
-
-let marker=new TextEncoder().encode("STEGO_"+pass+"_")
-
-let index=-1
-
-for(let i=0;i<data.length-marker.length;i++){
-
-let match=true
-
-for(let j=0;j<marker.length;j++){
-
-if(data[i+j]!==marker[j]){
-match=false
-break
-}
-
-}
-
-if(match){
-index=i+marker.length
-break
-}
-
-}
-
-if(index==-1){
-alert("Wrong passcode or no hidden file")
-return
-}
-
-let hidden=data.slice(index)
-
-let blob=new Blob([hidden],{type:"application/zip"})
-
-let link=document.createElement("a")
-link.href=URL.createObjectURL(blob)
-link.download="hidden.zip"
-link.click()
-
-document.getElementById("decodeStatus").innerText=
-"ZIP extracted"
-
-}
-
-reader.readAsArrayBuffer(file)
-
-}
-
-</script>
+  <a href="upi://pay?pa=MDISLAM8@JIO&pn=MDISLAM&am=100&cu=INR">
+    <button style="padding:15px 30px; font-size:18px; background-color:green; color:white; border:none; border-radius:10px;">
+      Pay ₹100
+    </button>
+  </a>
 
 </body>
 </html>
