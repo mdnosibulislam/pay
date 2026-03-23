@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Redirecting...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <script>
     window.onload = function() {
 
-      var amount = 150; // change dynamically if needed
-
-      var upiLink = "upi://pay?pa=MDISLAM8@JIO&pn=MDISLAM&am=" + amount + "&tn=Mess Payment&cu=INR";
+      var upiLink = "upi://pay?pa=MDISLAM8@JIO&pn=MDISLAM&tn=Mess Payment&cu=INR";
 
       window.location.href = upiLink;
 
@@ -14,7 +15,11 @@
   </script>
 </head>
 
-<body>
-  Redirecting...
+<body style="text-align:center; margin-top:100px;">
+  <h3>Opening payment app...</h3>
+  <p>If not redirected, 
+     <a href="upi://pay?pa=MDISLAM8@JIO&pn=MDISLAM&tn=Mess Payment&cu=INR">
+     Click here</a>
+  </p>
 </body>
 </html>
